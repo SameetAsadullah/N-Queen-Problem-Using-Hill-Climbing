@@ -1,1 +1,1 @@
-# N-Queen-s--Problem-Using-Hill-Climbing-and-Simulated-Annealing
+# N-Queen-Problem-Using-Hill-Climbing
