@@ -174,80 +174,6 @@ def hillClimbing():
         if np.array_equal(check, board):  # if no better neighbours were found then return
             return None
 
-
-# function to check neighbour when applying simulated annealing and move
-# if there's a better neighbour otherwise stay at the same position
-def checkNeighboursSA(row, col, T):
-    global board
-    temp_board = np.copy(board)
-
-    # if queen is in the first row who's neighbours are being checked
-    if row == 0:
-        temp_board[row][col] = 0
-        temp_board[row + 1][col] = 1
-        if (objectiveFunc(board) - objectiveFunc(temp_board)) > 0:  # if it's a better move
-            board = np.copy(temp_board)
-        else:  # otherwise randomly choose the neighbour
-            exp = (objectiveFunc(board) - objectiveFunc(temp_board)) / T
-            exp = math.exp(exp)
-            check = random.uniform(0, 1)
-            if check < exp:
-                board = np.copy(temp_board)
-
-    # if queen is in the last row who's neighbours are being checked
-    elif row == N - 1:
-        temp_board[row][col] = 0
-        temp_board[row - 1][col] = 1
-        if (objectiveFunc(board) - objectiveFunc(temp_board)) > 0:  # if it's a better move
-            board = np.copy(temp_board)
-        else:  # otherwise randomly choose the neighbour if probability is less than exp
-            exp = (objectiveFunc(board) - objectiveFunc(temp_board)) / T
-            exp = math.exp(exp)
-            check = random.uniform(0, 1)
-            if check < exp:
-                board = np.copy(temp_board)
-
-    # if in between first and last row
-    else:
-        check = random.randrange(0, 2)  # randomly choose any neighbour
-        if check == 1:
-            temp_board[row][col] = 0
-            temp_board[row - 1][col] = 1
-        else:
-            temp_board[row][col] = 0
-            temp_board[row + 1][col] = 1
-
-        if (objectiveFunc(board) - objectiveFunc(temp_board)) > 0:  # if it's a better move
-            board = np.copy(temp_board)
-        else:  # otherwise randomly choose the neighbour if probability is less than exp
-            exp = (objectiveFunc(board) - objectiveFunc(temp_board)) / T
-            exp = math.exp(exp)
-            check = random.uniform(0, 1)
-            if check < exp:
-                board = np.copy(temp_board)
-    return objectiveFunc(board)
-
-
-# simulated annealing algorithm
-def simulatedAnnealing(T, decFactor):
-    count = objectiveFunc(board)
-    while count != 0 and T > 1:  # loop until the solution is found or value of T becomes less than 1
-        # traversing through the board
-        for i in range(N):
-            if count == 0 or T <= 1:
-                break;
-            for j in range(N):
-                if count == 0 or T <= 1:
-                    break;
-                if board[i][j] == 1:
-                    count = checkNeighboursSA(i, j, T)
-                    T *= decFactor  # decrease value of T everytime
-    if T <= 1 and count != 0:
-        print("No solution found using Simulated Annealing.\n")
-        return None
-    return not None
-
-
 if __name__ == "__main__":
     N = int(input("Enter N: "))
     generate()
@@ -259,7 +185,3 @@ if __name__ == "__main__":
         print("\nNo solution found using Hill Climbing.\n")
     else:
         print("\nFinal board using Hill Climbing:\n", board)
-
-    board = np.copy(board_cpy)
-    if simulatedAnnealing(10000, 0.99) is not None:
-        print("Final board using Simulated Annealing:\n", board)
